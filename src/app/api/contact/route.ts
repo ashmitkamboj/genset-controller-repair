@@ -169,7 +169,7 @@ export async function POST(request: Request) {
     const safeMessage = escapeHtml(message).replace(/\r?\n/g, "<br />");
 
     const { error } = await resend.emails.send({
-      from: "Website Enquiry <ashmitkamboj@gmail.com>",
+      from: "Website Enquiry <onboarding@resend.dev>",
       to: contactEmail,
       replyTo: email,
       subject: `New ${controllerType} Repair Enquiry`.slice(0, 200),
