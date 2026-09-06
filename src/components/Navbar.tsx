@@ -28,14 +28,14 @@ export function Navbar() {
           <nav aria-label="Mobile navigation">
             <Link className={!isServicesPage ? "active" : ""} href="/">Home</Link>
             <Link className={isServicesPage ? "active" : ""} href="/repair-services">Repair Services</Link>
-            <Link href="/#contact">Contact</Link>
+            <Link href="/#contact-form">Contact</Link>
           </nav>
         </details>
 
         <nav className="desktop-nav" aria-label="Primary navigation">
           <Link className={!isServicesPage ? "active" : ""} href="/">Home</Link>
           <Link className={isServicesPage ? "active" : ""} href="/repair-services">Repair Services</Link>
-          <Link href="/#contact">Contact</Link>
+          <Link href="/#contact-form">Contact</Link>
         </nav>
       </div>
     </header>
