@@ -24,10 +24,6 @@ export function RepairsSection() {
           </div>
         </div>
       </div>
-      <div className="site-container placeholder-band" id="videos" aria-label="Future content area">
-        <span className="placeholder-line" />
-        <p>More repair insights coming soon</p>
-      </div>
     </section>
   );
 }
