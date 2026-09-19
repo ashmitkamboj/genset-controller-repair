@@ -16,7 +16,7 @@ type ContactPayload = {
 };
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const maxRequestBodyBytes = 15 * 1024 * 1024; // 15 MB for image attachments
+const maxRequestBodyBytes = 15 * 1024 * 1024; 
 const rateLimitWindowMs = 15 * 60 * 1000;
 const maxRequestsPerWindow = 5;
 const requestCounts = new Map<string, { count: number; windowStartedAt: number }>();
