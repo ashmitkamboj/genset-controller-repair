@@ -1,16 +1,22 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
+type AttachmentPayload = {
+  filename?: unknown;
+  content?: unknown;
+};
+
 type ContactPayload = {
   name?: unknown;
   phone?: unknown;
   email?: unknown;
   controllerType?: unknown;
   message?: unknown;
+  attachments?: unknown;
 };
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const maxRequestBodyBytes = 16 * 1024;
+const maxRequestBodyBytes = 15 * 1024 * 1024; // 15 MB for image attachments
 const rateLimitWindowMs = 15 * 60 * 1000;
 const maxRequestsPerWindow = 5;
 const requestCounts = new Map<string, { count: number; windowStartedAt: number }>();
@@ -68,7 +74,8 @@ export async function POST(request: Request) {
       );
     }
 
-    if (requestOrigin !== allowedOrigin) {
+    const allowedOrigins = allowedOrigin.split(",").map((o) => o.trim());
+    if (requestOrigin && !allowedOrigins.includes(requestOrigin)) {
       return NextResponse.json(
         { success: false, message: "Forbidden." },
         { status: 403 },
@@ -150,6 +157,30 @@ export async function POST(request: Request) {
       );
     }
 
+    const rawAttachments = Array.isArray(body.attachments) ? body.attachments : [];
+    if (rawAttachments.length > 5) {
+      return NextResponse.json(
+        { success: false, message: "Maximum 5 photos allowed." },
+        { status: 400 },
+      );
+    }
+
+    const validatedAttachments: { filename: string; content: string }[] = [];
+    for (const att of rawAttachments) {
+      if (
+        typeof att === "object" &&
+        att !== null &&
+        typeof (att as AttachmentPayload).filename === "string" &&
+        typeof (att as AttachmentPayload).content === "string"
+      ) {
+        const filename = ((att as AttachmentPayload).filename as string).trim();
+        const content = ((att as AttachmentPayload).content as string).trim();
+        if (filename && content) {
+          validatedAttachments.push({ filename, content });
+        }
+      }
+    }
+
     const resendApiKey = process.env.RESEND_API_KEY;
     const contactEmail = process.env.CONTACT_EMAIL;
 
@@ -173,6 +204,7 @@ export async function POST(request: Request) {
       to: contactEmail,
       replyTo: email,
       subject: `New ${controllerType} Repair Enquiry`.slice(0, 200),
+      attachments: validatedAttachments.length > 0 ? validatedAttachments : undefined,
       html: `
         <h2>New Website Enquiry</h2>
 
@@ -180,6 +212,7 @@ export async function POST(request: Request) {
         <p><strong>Phone:</strong> ${safePhone}</p>
         <p><strong>Email:</strong> ${safeEmail}</p>
         <p><strong>Controller Type:</strong> ${safeControllerType}</p>
+        ${validatedAttachments.length > 0 ? `<p><strong>Attached Photos:</strong> ${validatedAttachments.length} photo(s) attached to this email.</p>` : ""}
 
         <h3>Message</h3>
         <p>${safeMessage}</p>

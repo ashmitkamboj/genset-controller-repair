@@ -6,7 +6,7 @@ export function RepairsSection() {
       <div className="site-container split-section repairs-layout">
         <div className="image-frame meter-frame">
           <Image
-            src="/images/repairs/repair-testing.png"
+            src="/images/repair-testing.png"
             alt="Technician testing an electronic controller board"
             width={640}
             height={427}

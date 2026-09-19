@@ -21,7 +21,7 @@ export function AboutSection() {
         </div>
         <div className="image-frame board-frame">
           <Image
-            src="/images/about/controller-board.png"
+            src="/images/controller-board.png"
             alt="Electronic genset controller board"
             width={480}
             height={640}
