@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function RepairsSection() {
   return (
-    <section className="repairs-section" id="repair-services" aria-labelledby="repairs-title">
+    <section className="repairs-section" aria-labelledby="repairs-title">
       <div className="site-container split-section repairs-layout">
         <div className="image-frame meter-frame">
           <Image
